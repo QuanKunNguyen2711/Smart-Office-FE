@@ -38,7 +38,6 @@ function Dashboard() {
   );
 
   const handleChange = (event) => {
-    console.log("change", event.target.value);
     setDevice(event.target.value);
     sendJsonMessage({
       event: "device_changed",
@@ -48,7 +47,6 @@ function Dashboard() {
 
   const processMessages = (event) => {
     let payload = JSON.parse(event.data);
-    console.log("payload", payload);
     if (payload.event === "incoming_value") {
       let cpyChartData = JSON.parse(JSON.stringify(chartData));
       cpyChartData = [
@@ -69,6 +67,21 @@ function Dashboard() {
         setChecked(!(payload.data["value"] === 0));
       }
     }
+  };
+
+  const handleLEDButton = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API}/led/publishMQTT/${!checked ? "1" : "0"}`
+      )
+      .then((res) => {
+        if (device != "home.sh-led") {
+          setChecked(res.data["status"]);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -159,19 +172,7 @@ function Dashboard() {
               control={
                 <Switch
                   checked={checked}
-                  onChange={() => {
-                    console.log("turn on led")
-                    axios
-                      .get(`${process.env.REACT_APP_API}/led/publishMQTT/${!checked ? "1" : "0"}`)
-                      .then((res) => {
-                        if (device != "home.sh-led") {
-                          setChecked(res.data["status"]);
-                        }
-                      })
-                      .catch(function (error) {
-                        console.log(error);
-                      });
-                  }}
+                  onChange={handleLEDButton}
                   inputProps={{ "aria-label": "controlled" }}
                 />
               }
