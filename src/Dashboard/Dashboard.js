@@ -14,6 +14,7 @@ import BasicTable from "./Table";
 import dayjs from "dayjs";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Typography from '@mui/material/Typography';
 
 function Dashboard() {
   const [device, setDevice] = useState("home.sh-humid");
@@ -125,6 +126,11 @@ function Dashboard() {
         justifyContent="center"
         sx={{ minHeight: "100vh" }}
       >
+        <Grid item>
+          <Typography variant="h3">
+            Smart Office
+          </Typography>
+        </Grid>
         <Grid
           container
           direction="row"
